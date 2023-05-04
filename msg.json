@@ -1,0 +1,40 @@
+{
+  "pdate_id": 400443180,
+  "message": {
+    "message_id": 7,
+    "from": {
+      "id": 5296922626,
+      "is_bot": false,
+      "first_name": "人",
+      "username": "TypeHito",
+      "language_code": "ru"
+    },
+    "chat": {
+      "id": -944511416,
+      "title": "IldamChatBotTest",
+      "type": "group",
+      "all_members_are_administrators": true
+    },
+    "date": 1683197879,
+    "new_chat_participant": {
+      "id": 6062310939,
+      "is_bot": true,
+      "first_name": "ChatGPT",
+      "username": "chatgpt_tgm_bot"
+    },
+    "new_chat_member": {
+      "id": 6062310939,
+      "is_bot": true,
+      "first_name": "ChatGPT",
+      "username": "chatgpt_tgm_bot"
+    },
+    "new_chat_members": [
+      {
+        "id": 6062310939,
+        "is_bot": true,
+        "first_name": "ChatGPT",
+        "username": "chatgpt_tgm_bot"
+      }
+    ]
+  }
+}
