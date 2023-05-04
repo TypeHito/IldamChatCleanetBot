@@ -24,7 +24,7 @@ rules = ["new_chat_member", "new_chat_members", "left_chat_member", "new_chat_ph
          "delete_chat_photo", "supergroup_chat_created"]
 
 
-def resethook():
+def reset_hook():
     del_web_hook = f"https://api.telegram.org/bot{TOKEN}/deleteWebhook"
     set_web_hook = f"https://api.telegram.org/bot{TOKEN}/setWebhook?url={hook_url}"
     del_hook_status = requests.post(del_web_hook)
@@ -80,7 +80,7 @@ def index():
 
 
 if not hook_status:
-    resethook()
+    reset_hook()
     hook_status = True
 
 if __name__ == "__main__":
