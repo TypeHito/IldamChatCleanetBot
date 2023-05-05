@@ -75,7 +75,7 @@ def index():
     return "<a href=\"https://t.me/typeHito\"><h1>Owner</h1>"
 
 
-if hook_status is False:
+if not hook_status:
     reset_hook()
     hook_status = True
 
