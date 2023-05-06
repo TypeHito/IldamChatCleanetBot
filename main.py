@@ -7,13 +7,13 @@ app = Flask(__name__)
 # set ssl
 sslify = SSLify(app)
 
-# """Global"""
-# TOKEN = """6274568989:AAHDBHET1_VnepsrmFl0LqZmBqTDbgoH7xw"""
-# hook_url = "IldamTeam.pythonanywhere.com"
-
-"""Local"""
-TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
-hook_url = "https://f094-213-230-82-243.eu.ngrok.io"
+"""Global"""
+TOKEN = """6274568989:AAHDBHET1_VnepsrmFl0LqZmBqTDbgoH7xw"""
+hook_url = "IldamTeam.pythonanywhere.com"
+#
+# """Local"""
+# TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
+# hook_url = "https://034f-213-230-82-243.eu.ngrok.io"
 
 
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
@@ -23,8 +23,9 @@ set_web_hook = f"{URL}setWebhook?url={hook_url}"
 
 # TypeHito TId = 5754619101
 # valids and stats
-valid_chats = {5296922626: {}, -962923652: {}, 5754619101: {}}
+valid_chats = {5296922626: {}, -962923652: {}, 5754619101: {}, -1001807554555: {}, -1001735017170: {}}
 valid_users = [5754619101]
+chat_types = ["group", "supergroup"]
 hook_status = False
 
 rules = ["new_chat_member", "new_chat_members", "left_chat_member", "new_chat_photo", "new_chat_title",
@@ -61,11 +62,15 @@ def delete_message(chat_id, message_id):
     return r.json()
 
 
+def get_valid_chats():
+    return "\n".join([str(chat) for chat in valid_chats.keys()])
+
+
 def admin_message_handler(message):
     chat = message["chat"]
     chat_id = chat["id"]
     chat_type = chat["type"]
-    chat_title = chat["title"] if chat_type == "group" else chat_type
+    chat_title = chat["title"] if chat_type in chat_types else chat_type
 
     # from_ = message["from"]
     # from_id = from_["id"]
@@ -76,21 +81,33 @@ def admin_message_handler(message):
 
     if text:
         if text[0] == "/":
-            command, value = str(text).split(" ")
-            if command == "/getchat":
-                if chat_type == "group":
+            if text == "/getchat":
+                if chat_type in chat_types:
                     send_message(
                         chat_id,
-                        f"💬Chat ::  {chat_title} ::\n"
-                        f"🆔infoChatID:  {chat_id}\n"
+                        f"💬 Chat:  {chat_title}\n"
+                        f"🆔 infoChatID:  {chat_id}\n"
                         f"✉️ MessageID:  {message_id}")
+                    return {"ok": True}
                 else:
-                    pass
-            elif command == "/getchats":
+                    send_message(chat_id, chat_type)
+            elif text == "/getchats":
                 # TODO getchats
                 pass
-            send_message(chat_id, f"command is: {command}\nValues is: {value}")
+            else:
+                try:
+                    command, value = str(text).split(" ")
+                except ValueError:
+                    send_message(chat_id, f"Text is: {text}\nexample: /command value")
+                    return {"ok": False}
 
+                if command == "/add":
+                    try:
+                        valid_chats[int(value)] = {}
+                    except (ValueError, KeyError):
+                        send_message(chat_id, f"{msg['uncheck']}Error\ncommand is: {command}\nValues is: {value}\n")
+                        return {"ok": False}
+                    send_message(chat_id, get_valid_chats())
     return {"ok": True}
 
 
@@ -117,9 +134,9 @@ def index():
             if chat_id not in valid_chats:
                 valid_chats[chat_id] = {}
                 send_message(valid_users[0], str(valid_chats))
-                return {"ok": True}
+                # return {"ok": True}
 
-            if (chat_id in valid_users) or (message["from"]["id"] in valid_users):
+            if (chat_id in valid_users) or (message["from"]["id"] in valid_users) or ():
                 return admin_message_handler(message)
 
         return {"ok": True}
@@ -132,5 +149,4 @@ if not hook_status:
     hook_status = True
 
 if __name__ == "__main__":
-    send_message(valid_users[0], "Bot HasBeen started")
     app.run()
