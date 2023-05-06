@@ -84,10 +84,11 @@ def admin_message_handler(message):
                         f"💬Chat ::  {chat_title} ::\n"
                         f"🆔infoChatID:  {chat_id}\n"
                         f"✉️ MessageID:  {message_id}")
-                else: pass
+                else:
+                    pass
             elif command == "/getchats":
-
-
+                # TODO getchats
+                pass
             send_message(chat_id, f"command is: {command}\nValues is: {value}")
 
     return {"ok": True}
