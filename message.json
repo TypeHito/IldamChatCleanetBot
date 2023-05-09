@@ -1,0 +1,16 @@
+{
+  "messageid": 183,
+  "from": {
+    "id": 5754619101,
+    "isbot": false,
+    "firstname": "\u4eba",
+    "username": "TypeHito",
+    "languagecode": "ru",
+    "ispremium": true},
+  "chat": {
+    "id": -962923652,
+    "title": "TypeHito Bot Test Group",
+    "type": "group",
+    "allmembersareadministrators": true},
+  "date": 1683636223,
+  "text": "+"}

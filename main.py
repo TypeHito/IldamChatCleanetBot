@@ -7,13 +7,13 @@ app = Flask(__name__)
 # set ssl
 sslify = SSLify(app)
 
-"""Global"""
-TOKEN = """6274568989:AAHDBHET1_VnepsrmFl0LqZmBqTDbgoH7xw"""
-hook_url = "IldamTeam.pythonanywhere.com"
-#
-# """Local"""
-# TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
-# hook_url = "https://034f-213-230-82-243.eu.ngrok.io"
+# """Global"""
+# TOKEN = """5886495741:AAH99PqcvNgD2vzxmtaH3FHVcKzw5ZnmdkQ"""
+# hook_url = "https://ildamteam.pythonanywhere.com"
+
+"""Local"""
+TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
+hook_url = "https://51f4-213-230-82-243.eu.ngrok.io"
 
 
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
@@ -23,7 +23,7 @@ set_web_hook = f"{URL}setWebhook?url={hook_url}"
 
 # TypeHito TId = 5754619101
 # valids and stats
-valid_chats = {5296922626: {}, -962923652: {}, 5754619101: {}, -1001807554555: {}, -1001735017170: {}}
+valid_chats = {}
 valid_users = [5754619101]
 chat_types = ["group", "supergroup"]
 hook_status = False
@@ -40,6 +40,7 @@ msg = {
 def reset_hook():
     del_hook_status = requests.post(del_web_hook).status_code
     set_hook_status = requests.post(set_web_hook).status_code
+    send_message(valid_users[0], f"URL:{hook_url}")
     send_message(valid_users[0],
                  f"\n{msg['check']  if del_hook_status == 200 else msg['uncheck']} HookDel status: {del_hook_status}"
                  f"\n{msg['check']  if set_hook_status == 200 else msg['uncheck']} HookSet status: {set_hook_status}")
@@ -66,48 +67,58 @@ def get_valid_chats():
     return "\n".join([str(chat) for chat in valid_chats.keys()])
 
 
+def get_chat_form(valid_chat):
+    chat = valid_chat.get("chat")
+    from_ = valid_chat.get("from")
+    if chat.get("chat_type") != 'private':
+        chat_id = chat.get("id") if chat.get("id") else ''
+        chat_type = chat.get("type") if chat.get("type") else ''
+        chat_username = chat.get("username") if chat.get("username") else ''
+        chat_title = chat.get("title") if chat.get("title") else ''
+        chat_msg = f"💬 Chat:  {chat_title}\n" \
+                   f"ChatID:  {chat_id}\n" \
+                   f"ChatType:  {chat_type}\n" \
+                   f"ChatUserName:  {chat_username}\n"
+    else:
+        chat_msg = ''
+
+    if from_:
+        from_id = from_.get("id") if from_.get("id") else ''
+        firstname = from_.get("firstname") if from_.get("firstname") else ''
+        lastname = from_.get("lastname") if from_.get("lastname") else ''
+        username = from_.get("username") if from_.get("username") else ''
+
+        from_msg = f"👤 FromID:  {from_id}\n"\
+                   f"FirstName:  {firstname}\n"\
+                   f"LastName:  {lastname}\n"\
+                   f"UserName:  {username}\n"
+    else:
+        from_msg = ''
+    return chat_msg + from_msg
+
+
+def get_chats_form():
+    text = []
+    for i in valid_chats:
+       text.append(get_chat_form(valid_chats[i]))
+    return text
+
+
 def admin_message_handler(message):
     chat = message["chat"]
     chat_id = chat["id"]
-    chat_type = chat["type"]
-    chat_title = chat["title"] if chat_type in chat_types else chat_type
-
-    # from_ = message["from"]
-    # from_id = from_["id"]
-    # first_name = from_["username"]
 
     text = message['text']
-    message_id = message['message_id']
 
     if text:
         if text[0] == "/":
             if text == "/getchat":
-                if chat_type in chat_types:
-                    send_message(
-                        chat_id,
-                        f"💬 Chat:  {chat_title}\n"
-                        f"🆔 infoChatID:  {chat_id}\n"
-                        f"✉️ MessageID:  {message_id}")
-                    return {"ok": True}
-                else:
-                    send_message(chat_id, chat_type)
+                send_message(chat_id, get_chat_form(valid_chats[chat_id]))
             elif text == "/getchats":
-                # TODO getchats
-                pass
-            else:
-                try:
-                    command, value = str(text).split(" ")
-                except ValueError:
-                    send_message(chat_id, f"Text is: {text}\nexample: /command value")
-                    return {"ok": False}
+                send_message(chat_id, "\n".join(get_chats_form()))
+            elif text == "/savechats":
+                send_message(chat_id, valid_chats)
 
-                if command == "/add":
-                    try:
-                        valid_chats[int(value)] = {}
-                    except (ValueError, KeyError):
-                        send_message(chat_id, f"{msg['uncheck']}Error\ncommand is: {command}\nValues is: {value}\n")
-                        return {"ok": False}
-                    send_message(chat_id, get_valid_chats())
     return {"ok": True}
 
 
@@ -124,7 +135,6 @@ def index():
             except Exception as err:
                 send_message(valid_users[0], f" Chat or Chat_ID not Found!: \n{err}\n{r}")
                 return {"ok": False}
-
             for rule in rules:
                 if message.get(rule):
                     # Here deleting message from chat
@@ -132,8 +142,8 @@ def index():
                     return {"ok": True}
 
             if chat_id not in valid_chats:
-                valid_chats[chat_id] = {}
-                send_message(valid_users[0], str(valid_chats))
+                valid_chats[chat_id] = {"from": message['from'], "chat": message["chat"]}
+                send_message(valid_users[0], "Please check chats")
                 # return {"ok": True}
 
             if (chat_id in valid_users) or (message["from"]["id"] in valid_users) or ():

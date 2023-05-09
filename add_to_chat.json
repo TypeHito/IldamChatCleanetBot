@@ -1,0 +1,31 @@
+{
+  "messageid": 178,
+  "from": {
+    "id": 5754619101,
+    "isbot": false,
+    "firstname": "\u4eba",
+    "username": "TypeHito",
+    "languagecode": "ru",
+    "ispremium": true},
+  "chat": {
+    "id": -962923652,
+    "title": "TypeHito Bot Test Group",
+    "type": "group",
+    "allmembersareadministrators": true},
+  "date": 1683635989,
+  "newchatparticipant": {
+    "id": 5979261876,
+    "isbot": true,
+    "firstname": "TypeHito BetaTestBot",
+    "username": "TypeHitoBetaTestBot"},
+  "newchatmember": {
+    "id": 5979261876,
+    "isbot": true,
+    "firstname": "TypeHito BetaTestBot",
+    "username": "TypeHitoBetaTestBot"},
+  "newchatmembers": {
+    "id": 5979261876,
+    "is_bot": true,
+    "first_name": "TypeHito BetaTestBot",
+    "username": "TypeHitoBetaTestBot"}
+}
