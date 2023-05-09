@@ -15,7 +15,6 @@ sslify = SSLify(app)
 TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
 hook_url = "https://51f4-213-230-82-243.eu.ngrok.io"
 
-
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
 
 del_web_hook = f"{URL}deleteWebhook"
@@ -42,8 +41,8 @@ def reset_hook():
     set_hook_status = requests.post(set_web_hook).status_code
     send_message(valid_users[0], f"URL:{hook_url}")
     send_message(valid_users[0],
-                 f"\n{msg['check']  if del_hook_status == 200 else msg['uncheck']} HookDel status: {del_hook_status}"
-                 f"\n{msg['check']  if set_hook_status == 200 else msg['uncheck']} HookSet status: {set_hook_status}")
+                 f"\n{msg['check'] if del_hook_status == 200 else msg['uncheck']} HookDel status: {del_hook_status}"
+                 f"\n{msg['check'] if set_hook_status == 200 else msg['uncheck']} HookSet status: {set_hook_status}")
 
 
 def send_message(chat_id, text, parse_mode="markdown", reply_markup=None):
@@ -88,9 +87,9 @@ def get_chat_form(valid_chat):
         lastname = from_.get("lastname") if from_.get("lastname") else ''
         username = from_.get("username") if from_.get("username") else ''
 
-        from_msg = f"👤 FromID:  {from_id}\n"\
-                   f"FirstName:  {firstname}\n"\
-                   f"LastName:  {lastname}\n"\
+        from_msg = f"👤 FromID:  {from_id}\n" \
+                   f"FirstName:  {firstname}\n" \
+                   f"LastName:  {lastname}\n" \
                    f"UserName:  {username}\n"
     else:
         from_msg = ''
@@ -100,7 +99,7 @@ def get_chat_form(valid_chat):
 def get_chats_form():
     text = []
     for i in valid_chats:
-       text.append(get_chat_form(valid_chats[i]))
+        text.append(get_chat_form(valid_chats[i]))
     return text
 
 
