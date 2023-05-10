@@ -7,13 +7,13 @@ app = Flask(__name__)
 # set ssl
 sslify = SSLify(app)
 
-# """Global"""
-# TOKEN = """5886495741:AAH99PqcvNgD2vzxmtaH3FHVcKzw5ZnmdkQ"""
-# hook_url = "https://ildamteam.pythonanywhere.com"
-
-"""Local"""
-TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
-hook_url = "https://51f4-213-230-82-243.eu.ngrok.io"
+"""Global"""
+TOKEN = """5886495741:AAH99PqcvNgD2vzxmtaH3FHVcKzw5ZnmdkQ"""
+hook_url = "https://ildamteam.pythonanywhere.com"
+#
+# """Local"""
+# TOKEN = """5979261876:AAG6mtGYyaxr0UQdmOjDouHTrekgjO_94Hk"""
+# hook_url = "https://51f4-213-230-82-243.eu.ngrok.io"
 
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
 
@@ -22,7 +22,7 @@ set_web_hook = f"{URL}setWebhook?url={hook_url}"
 
 # TypeHito TId = 5754619101
 # valids and stats
-valid_chats = {}
+valid_chats = {'-1001807554555': {"from": {"id": 5754619101, "isbot": False, "firstname": "\u4eba", "username": "TypeHito", "languagecode": "ru", "ispremium": True}, "chat": {"id": -1001807554555, "title": "IldamChatBotGroup", "type": "supergroup"}}, "5754619101": {"from": {"id": 5754619101, "isbot": False, "firstname": "\u4eba", "username": "TypeHito", "languagecode": "ru", "ispremium": True}, "chat": {"id": 5754619101, "firstname": "\u4eba", "username": "TypeHito", "type": "private"}}, "-962923652": {"from": {"id": 5754619101, "isbot": False, "firstname": "\u4eba", "username": "TypeHito", "languagecode": "ru", "ispremium": True}, "chat": {"id": -962923652, "title": "TypeHito Bot Test Group", "type": "group", "allmembersareadministrators": True}}}
 valid_users = [5754619101]
 chat_types = ["group", "supergroup"]
 hook_status = False
@@ -72,7 +72,7 @@ def get_chat_form(valid_chat):
     if chat.get("chat_type") != 'private':
         chat_id = chat.get("id") if chat.get("id") else ''
         chat_type = chat.get("type") if chat.get("type") else ''
-        chat_username = chat.get("username") if chat.get("username") else ''
+        chat_username = '@' + chat.get("username") if chat.get("username") else ''
         chat_title = chat.get("title") if chat.get("title") else ''
         chat_msg = f"💬 Chat:  {chat_title}\n" \
                    f"ChatID:  {chat_id}\n" \
@@ -85,7 +85,7 @@ def get_chat_form(valid_chat):
         from_id = from_.get("id") if from_.get("id") else ''
         firstname = from_.get("firstname") if from_.get("firstname") else ''
         lastname = from_.get("lastname") if from_.get("lastname") else ''
-        username = from_.get("username") if from_.get("username") else ''
+        username = '@' + from_.get("username") if from_.get("username") else ''
 
         from_msg = f"👤 FromID:  {from_id}\n" \
                    f"FirstName:  {firstname}\n" \
@@ -96,11 +96,9 @@ def get_chat_form(valid_chat):
     return chat_msg + from_msg
 
 
-def get_chats_form():
-    text = []
+def get_chats_form(chat_id):
     for i in valid_chats:
-        text.append(get_chat_form(valid_chats[i]))
-    return text
+        send_message(chat_id, get_chat_form(valid_chats[i]))
 
 
 def admin_message_handler(message):
@@ -114,7 +112,7 @@ def admin_message_handler(message):
             if text == "/getchat":
                 send_message(chat_id, get_chat_form(valid_chats[chat_id]))
             elif text == "/getchats":
-                send_message(chat_id, "\n".join(get_chats_form()))
+                get_chats_form(chat_id)
             elif text == "/savechats":
                 send_message(chat_id, valid_chats)
 
@@ -142,8 +140,8 @@ def index():
 
             if chat_id not in valid_chats:
                 valid_chats[chat_id] = {"from": message['from'], "chat": message["chat"]}
-                send_message(valid_users[0], "Please check chats")
-                # return {"ok": True}
+                send_message(valid_users[0], "Please check chats\n" + get_chat_form(chat_id))
+                return {"ok": True}
 
             if (chat_id in valid_users) or (message["from"]["id"] in valid_users) or ():
                 return admin_message_handler(message)
