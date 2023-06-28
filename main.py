@@ -12,8 +12,8 @@ TOKEN = """6240624335:AAFq3tH4ymVtFukVUYLW7-kwZ9VeAIGaNzQ"""
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
 
 
-hook_url = "https://ildamteam.pythonanywhere.com"
-# hook_url = "https://b2d0-213-230-118-16.eu.ngrok.io"
+# hook_url = "https://ildamteam.pythonanywhere.com"
+hook_url = "https://747a-213-230-72-241.ngrok-free.app  "
 
 valid_chats = [5754619101]
 valid_users = [5754619101]
