@@ -2,19 +2,18 @@ from flask import Flask
 from flask import request as f_request
 import requests
 from flask_sslify import SSLify
-
+import os
 app = Flask(__name__)
 # set ssl
 sslify = SSLify(app)
 
 """Global"""
-TOKEN = """6240624335:AAFq3tH4ymVtFukVUYLW7-kwZ9VeAIGaNzQ"""
+TOKEN = """6240624335:AAE6qwkiK2MOSel7AIQnFpyFUuc-o2MCmjA"""
 URL = f"""https://api.telegram.org/bot{TOKEN}/"""
 
 
-# hook_url = "https://ildamteam.pythonanywhere.com"
-hook_url = "https://747a-213-230-72-241.ngrok-free.app  "
-
+# SERVER = "https://ildamteam.pythonanywhere.com/"
+SERVER = "cb5a56d1cc0b-14017016777135754370.ngrok-free.app"
 valid_chats = [5754619101]
 valid_users = [5754619101]
 rules = ["new_chat_member", "new_chat_members", "left_chat_member", "new_chat_photo", "new_chat_title",
@@ -23,10 +22,10 @@ rules = ["new_chat_member", "new_chat_members", "left_chat_member", "new_chat_ph
 
 def reset_hook():
     del_web_hook = f"{URL}deleteWebhook"
-    set_web_hook = f"{URL}setWebhook?url={hook_url}"
+    set_web_hook = f"{URL}setWebhook?url={SERVER}"
     send_message(valid_users[0], f"reset bot\n"
-                                 f"❌del: {del_web_hook}\n"
-                                 f"✅set: {set_web_hook}\n")
+                                 f"[❌del webhook]({del_web_hook})\n"
+                                 f"[✅set webhook]({set_web_hook})\n")
 
 
 def send_message(chat_id, text, parse_mode="markdown"):
